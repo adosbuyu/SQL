@@ -63,6 +63,27 @@ CREATE TABLE ServiceTicketParts_buyuh (
     FOREIGN KEY (part_id) REFERENCES Parts_buyuh(part_id)
 );
 
+DROP FUNCTION IF EXISTS InsertSalesperson(integer, character varying, numeric);
+
+CREATE OR REPLACE FUNCTION InsertSalesperson(salesperson_id INT, name VARCHAR(50), commission DECIMAL(10, 2))
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO Salesperson_buyuh(salesperson_id, name, commission)
+    VALUES (salesperson_id, name, commission);
+END;
+$$ LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS InsertCustomer(integer, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION InsertCustomer(customer_id INT, name VARCHAR(50), email VARCHAR(100))
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO Customer_buyuh (customer_id, name, email)
+    VALUES (customer_id, name, email);
+END;
+$$ LANGUAGE plpgsql;
+
+
 
 -- Add sample data
 INSERT INTO Salesperson_buyuh (salesperson_id, name, commission) VALUES
@@ -104,6 +125,12 @@ WHERE customer_id = 1;
 UPDATE Customer_buyuh
 SET email = 'bob.anderson@ymail.com'
 WHERE customer_id = 2;
+
+-- insert salesperson using the function "InsertSalesperson"
+select InsertSalesperson(3, 'Jurry Joe', 0.17);
+
+--insert a customer using the function "InsertCustomer"
+select InsertCustomer(3, 'John Mary', 'mary.john@aol.com');
 
 select * from Salesperson_buyuh
 select * from Customer_buyuh
